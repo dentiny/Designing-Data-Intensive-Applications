@@ -1,0 +1,4 @@
+relational model: many-to-many relaion, poor data locality
+document model: self-contained document-like structure, relationship between
+one document and another is rare
+graph model: target use cases where anything's potentially related to everything
