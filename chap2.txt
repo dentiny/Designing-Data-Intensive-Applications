@@ -1,4 +1,11 @@
-relational model: many-to-many relaion, poor data locality
-document model: self-contained document-like structure, relationship between
-one document and another is rare
-graph model: target use cases where anything's potentially related to everything
+relational model:
+(1) many-to-many relaion
+(2) data relationship explicit(schema-on-write)
+(3)poor data locality
+
+document model:
+(1) self-contained document-like structure
+(2) relationship between one document and another is rare
+
+graph model:
+(1) target use cases where anything's potentially related to everything
