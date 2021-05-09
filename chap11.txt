@@ -15,3 +15,7 @@ partitions
 (2) could be used to keep heterogeneous consumers in sync(eg, data warehouse,
 search index, etc)
 (3) logs stored at circular bounded buffer on disk
+
+4. How stream system achieves fault tolerance?
+(1) implement mini-batching, which consists of bounded input data
+(2) apply fault tolerance strategy used by batch system
