@@ -1,0 +1,10 @@
+1. Why not direct communication between producers and consumers?
+(1) speed mismatch(message broker buffers)
+(2) what if node failure? (message broker provides fault tolerance)
+
+2. log-based message broker:
+(1) provides total ordering within partition, no ordering guarentee across
+partitions
+(2) could be used to keep heterogeneous consumers in sync(eg, data warehouse,
+search index, etc)
+(3) logs stored at circular bounded buffer on disk
