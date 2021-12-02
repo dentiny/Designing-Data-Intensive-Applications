@@ -5,7 +5,18 @@ relational model:
 
 document model:
 (1) self-contained document-like structure
+  - document-like structure: a tree of one-many relationships
 (2) relationship between one document and another is rare
+  - doesn't support well for many-to-many relation and join operation
+(3) two types of schema:
+1/ schema-on-read: structure of data is implicit, only interpreted when data is
+read
+2/ schema-on-write: schema is explicit, db ensures all written data conforms
+document model takes schema-on-read, relational model takes schema-on-write
+(4) limitation: it's encouraged to keep documents small and avoid writes that
+increase the size of a document: if modifications that change the encoded size
+of the document, the ensure document needs to be rewritten
 
 graph model:
 (1) target use cases where anything's potentially related to everything
+  - many-to-many relationship is common

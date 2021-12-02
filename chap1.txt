@@ -14,4 +14,6 @@ note:
 response time: interval between user issues and receives
 latency: interval request waits to be handled
 (3) prefer percentile over mean and median(SLO, SLA)
-(4) one reason why response time's terrible: head-of-line blocking(tail latency)
+(4) fan-out: number of requests to other services that we need to make in 
+order to serve one incoming request
+(5) one reason why response time's terrible: head-of-line blocking(tail latency)
