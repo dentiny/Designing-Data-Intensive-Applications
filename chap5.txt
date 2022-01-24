@@ -31,3 +31,13 @@ improvement on quorum-based protocal: sloppy quorum and hinted handoff(DynamoDB)
 (1) when quorum is not met(maybe because of a temporary network offline), store 
 it to a server which is not in the replication group
 (2) after the replica server comes back, pass the data back to it
+
+drawbacks for vector clock:
+(1) have to acquire vector clock before request to update
+(2) it only helps to detect conflict, but not viable to resolve it
+(3) the whole system doesn't work under heavy load, when conflict resolution is
+slower than concurrent update conflict
+so Cassandra chooses to 
+(1) use LWW (Last Write Wins) with NTP (Network Time  Protocol), which works 
+fine in most cases
+(2) provide linearizability with lightweight transaction (paxos propose/promise)
