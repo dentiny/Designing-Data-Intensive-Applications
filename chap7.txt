@@ -8,7 +8,7 @@ all accounts must always be balanced
 has written won't be forgotten, even if there's a hardware fault or database 
 crash
 
-multi-object transaction use case(P231):
+multi-object transaction use case (P231):
 (1) there's foreign key in relational database, update has to make sure 
 references remain valid
 (2) in databases with secondary index, updating a value involves updating a
@@ -19,3 +19,37 @@ It's only worth retrying after transient errors(eg: deadlock, isolation
 violation, temporary network interruptions); after a permanent error(eg:
 contraint violation) a retry would be pointless(could worsen overload, 
 perform operation multiple times)
+
+Read committed: default isolation level
+(1) how to prevent dirty read: maintain a copy for the old value, and switch 
+to new after committed
+(2) how to prevent dirty write: row level lock
+(3) would lead to nonrepeated read/read skew: read before and after commit shows
+inconsistent state for database, snapshot isolation is the solution
+
+SI (Snapshot isolation):
+(1) reader never blocks writer, writer never blocks reader
+(2) use row-level lock to prevent dirty write
+(3) use MVCC to prevent dirty read: keep several committed versions of an object
+- each row has a `created_by` and `deleted_by` field
+- transaction ID is a unique, always-increasing value
+- i.e. vacuum process performs cleanup, which ensures overflow never happens
+(4) prevents phantoms in read-only situations, but would lead to write skew in 
+read-write situations
+- write skew:
+1/ multiple clients perform read-modify-write
+2/ fetched results shows write precondition is met for everyone
+3/ multiple clients perform write on different objects, which leads to the 
+constrain broken
+4/ for single object concurrent update, could use atomic update or explicit lock
+(5) solutions to write skew:
+1/ 2PL: write blocks both writers and readers, index-range lock (also called 
+next-key lock)， which locks on value instead of objects
+
+SSI (Serializable Snapshot Isolation):
+the write skew for SI comes from: casual dependency between query and latter 
+write, so SSI acts on outdated premise for write cases
+i.e. txn1 makes changes on A, which txn2 and txn3 depends on. When txn1 commits,
+it notifies txn2 and txn3 about its change.
+txn aborts if write skew could happen, otherwise proceed txn (i.e. read-only)
+
