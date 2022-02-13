@@ -4,10 +4,17 @@ packet loss, latenc, jitter
 (2) admission control: check before establishing connection
 
 2. LWW(Last Write Wins) widely accepted, problem on physical time decision:
-(1) clock_gettime(CLOCK_REALTIME): could jump forward or backward
-(2) clock_gettime(CLOCK_MONOTONIC): deesn't represent absolute time. but
-guarentee monotonous on single machine(actually single CPU)
-(3) could sync-up by NTP(Network Tiime Protocal)
+(1) time-of-day clock:
+1/ clock_gettime(CLOCK_REALTIME) returns time passed since epoch
+2/ if synchronized with NTP, could jump forward or backward
+(2) monotonous clock:
+1/ clock_gettime(CLOCK_MONOTONIC)
+2/ if synchronized NTP, doesn't jump forward or backward, but allows the clock
+frequency to speed up or down
+3/ doesn't represent absolute time. but guarentee monotonous on single machine 
+(actually single CPU)
+4/ good to measure elapsed time
+(3) could sync-up by NTP (Network Tiime Protocal)
 	potential problem: NTP daemon misconfiguration, firewall blocks NTP traffic,
 	clock error due to drift becomes large
 
@@ -16,3 +23,8 @@ guarentee monotonous on single machine(actually single CPU)
 (2) bad code example: P296
 
 4. The truth is defined by the majority.
+
+5. lease alone doesn't guarantee exclusive access
+- i.e. GC (Garbage Collection) could lead to several minutes stall
+- should use lease + fencing token instead (an atomic counter indicates whether
+lease version is still the latest)
