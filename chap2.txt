@@ -12,7 +12,9 @@ document model:
 1/ schema-on-read: structure of data is implicit, only interpreted when data is
 read
 2/ schema-on-write: schema is explicit, db ensures all written data conforms
-document model takes schema-on-read, relational model takes schema-on-write
+Example:
+1/ document model takes schema-on-read, relational model takes schema-on-write
+2/ data warehouse uses schema-on-write, data lake takes schema-on-read
 (4) limitation: it's encouraged to keep documents small and avoid writes that
 increase the size of a document: if modifications that change the encoded size
 of the document, the ensure document needs to be rewritten
