@@ -19,3 +19,42 @@ search index, etc)
 4. How stream system achieves fault tolerance?
 (1) implement mini-batching, which consists of bounded input data
 (2) apply fault tolerance strategy used by batch system
+
+5. How to keep systems in sync:
+reasoning: there's no system which meets data storage, query, and processing
+(1) ETL (take data, transform, bulk load): batch processing
+(2) dual write: concurrency issue if there's no leader ensuring the order
+- eg: system A: action1, then action2; system B: action2, then action1
+(3) CDC
+- stream processing
+- ensure all changes made to one system also reflected in derived data system
+- focus on state change, able to compact
+(4) event sourcing
+- stream processing
+- store "event" rather than "state", thus append-only, not able to compact
+- differentiate "command" and "event": once "command" verified, "event" is 
+generated, it becomes "fact", then consumer for stream not allowd to reject
+- CQRS (Command Query Responsibility Segregation): write event, read state view
+
+6. basic on stream processing:
+1/ reasoning on time:
+(1) time when event happens, device time
+(2) time when event is sent to server, device time
+(3) time when event is received at server, server time
+=> able to estimate event time
+
+2/ window type:
+(1) tumbling window: non-overlapping fixed-size window
+(2) hopping window: overlapping fixed-size window
+(3) sliding window: contains events which occur within interval of each other
+(4) session window: aggregation on events, no fixed duration
+
+3/ two types of message queue:
+(1) AMQP-style: broker assigns messages individually to consumers, and delete
+them after acknowledgement, it's the asynchronous version of RPC
+(2) log-based style:
+- broker assigns logs to consumers, progress is tracked via log offset to
+indicate whether current log is processed
+- logs are persisted in disk, so playback is allowed
+- compaction is performed for state-based logging (CDC is an example, while 
+event sourcing doesn't support)
